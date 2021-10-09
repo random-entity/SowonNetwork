@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +6,10 @@ public class Rock : MonoBehaviour
     private string username;
     private List<string> wishlist;
     private List<string> mercylist;
+
+    public void setUsername(string username) {
+        this.username = username;
+    }
 
     private void Awake()
     {
