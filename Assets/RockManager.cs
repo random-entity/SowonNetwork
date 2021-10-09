@@ -9,9 +9,13 @@ public class RockManager : MonoBehaviour
     private void Awake()
     {
         rockList = new List<Rock>();
+
+        addRock("chu", "dog cat cola", "friend dance job");
+        addRock("ku", "cat soccer dance", "cola dog boyfriend");
+        addRock("mi", "grade health muscle iphone", "friend girlfriend house");
     }
 
-    void addRock(string username, string wishes, string mercies)
+    public void addRock(string username, string wishes, string mercies)
     {
         Rock newRock = Instantiate(rockPrefab);
 
