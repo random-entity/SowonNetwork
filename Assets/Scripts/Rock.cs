@@ -62,8 +62,13 @@ public class Rock : MonoBehaviour
     {
         addData(input, mercylist);
     }
+    public void setMesh(int index)
+    {
+        head.GetComponent<MeshFilter>().mesh = MeshSelector.instance.meshesHead[index];
+        tail.GetComponent<MeshFilter>().mesh = MeshSelector.instance.meshesTail[index];
+    }
     #endregion
-   
+
     #region AddRock event handling
     private void OnEnable()
     {
@@ -128,20 +133,46 @@ public class Rock : MonoBehaviour
         addForce();
     }
 
-    private void addForce() {
-        foreach(Rock other in matches) {            
+    private void addForce()
+    {
+        foreach (Rock other in RockManager.rockList)
+        {
+            if (other == this) continue;
+
             Vector3 dir = other.tail.position - head.position;
+            float sqrDist = dir.sqrMagnitude;
             dir = Vector3.Normalize(dir);
 
             Rigidbody otherTailRb = other.tailRb;
 
-            headRb.AddForce(dir, ForceMode.Force);
-            otherTailRb.AddForce(-dir, ForceMode.Force);
+            float sign = 1f;
+
+            if (!matches.Contains(other))
+            {
+                if (sqrDist < 4f)
+                {
+                    sign /= -8f * sqrDist;
+                }
+                else
+                {
+                    sign = 0f;
+                }
+            }
+
+            headRb.AddForce(sign * dir, ForceMode.Force);
+            otherTailRb.AddForce(sign * -dir, ForceMode.Force);
         }
     }
 
-    private void OnDrawGizmos() {
-        foreach(Rock other in matches) {
+    private void constrain()
+    {
+        // if(transform.)
+    }
+
+    private void OnDrawGizmos()
+    {
+        foreach (Rock other in matches)
+        {
             Gizmos.DrawLine(head.position, other.tail.position);
         }
     }
