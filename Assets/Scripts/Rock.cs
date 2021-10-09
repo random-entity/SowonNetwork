@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Rigidbody))]
 public class Rock : MonoBehaviour
 {
     #region fields
@@ -11,7 +10,8 @@ public class Rock : MonoBehaviour
     private Text wishesText, merciesText, usernameText;
     private List<Rock> notYetChecked;
     private List<Rock> matches;
-    public Rigidbody rb;
+    public Transform head, tail;
+    [HideInInspector] public Rigidbody headRb, tailRb;
     #endregion
 
     #region getters and setters
@@ -95,7 +95,9 @@ public class Rock : MonoBehaviour
         merciesText = texts[1];
         usernameText = texts[2];
 
-        rb = GetComponent<Rigidbody>();
+        Rigidbody[] rbs = GetComponentsInChildren<Rigidbody>();
+        headRb = head.GetComponent<Rigidbody>();
+        tailRb = tail.GetComponent<Rigidbody>();
     }
     private void Start()
     {
@@ -127,22 +129,20 @@ public class Rock : MonoBehaviour
     }
 
     private void addForce() {
-        foreach(Rock other in matches) {
-            Vector3 dir = other.transform.position - transform.position;
+        foreach(Rock other in matches) {            
+            Vector3 dir = other.tail.position - head.position;
             dir = Vector3.Normalize(dir);
 
-            rb.AddForce(dir, ForceMode.Force);
-            other.rb.AddForce(-dir, ForceMode.Force);
+            Rigidbody otherTailRb = other.tailRb;
+
+            headRb.AddForce(dir, ForceMode.Force);
+            otherTailRb.AddForce(-dir, ForceMode.Force);
         }
     }
-    // private static Vector3 getForce(Vector3 other) {
-
-    // }
-
 
     private void OnDrawGizmos() {
         foreach(Rock other in matches) {
-            Gizmos.DrawLine(transform.position, other.transform.position);
+            Gizmos.DrawLine(head.position, other.tail.position);
         }
     }
 }
