@@ -22,7 +22,7 @@ public class RockManager : MonoBehaviour
 
     public void addRock(string username, string wishes, string mercies)
     {
-        Rock newRock = Instantiate(rockPrefab);
+        Rock newRock = Instantiate(rockPrefab, new Vector3(Random.Range(-10f, 10f), Random.Range(-10f, 10f), 0f), Quaternion.identity);
 
         newRock.setUsername(username);
         newRock.addWishData(wishes);

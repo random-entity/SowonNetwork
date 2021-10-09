@@ -19,6 +19,7 @@ public class Rock : MonoBehaviour
     {
         this.username = username;
         usernameText.text = this.username;
+        gameObject.name = "ROCK_" + this.username;
     }
     public List<string> getMercylist()
     {

@@ -490,7 +490,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cab037e6b324d4794ab6ecc24f821fad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rockPrefab: {fileID: 1475367769950571088, guid: 80c1eea7210824f159bf87114652dae1, type: 3}
+  rockPrefab: {fileID: 5509624188458192074, guid: 059833d963a2a4aff8ce0edd1dbb0833, type: 3}
 --- !u!4 &1574155797
 Transform:
   m_ObjectHideFlags: 0
