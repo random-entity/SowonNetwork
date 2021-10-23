@@ -10,7 +10,7 @@ public class Rock : MonoBehaviour
     private Text wishesText, merciesText, usernameText;
     private List<Rock> notYetChecked;
     private List<Rock> matches;
-    public Transform head, tail;
+    public Transform head, tail; // head = 베풂, tail = 소원
     [HideInInspector] public Rigidbody headRb, tailRb;
     #endregion
 
@@ -110,7 +110,7 @@ public class Rock : MonoBehaviour
         merciesText.text = getMerciesString();
     }
 
-    private void searchMatch()
+    private void searchMatch() // 나의 소원(tail) => 남의 베풂(head)
     {
         foreach (string myWish in wishlist)
         {
@@ -139,28 +139,25 @@ public class Rock : MonoBehaviour
         {
             if (other == this) continue;
 
-            Vector3 dir = other.tail.position - head.position;
+            Vector3 dir = other.head.position - tail.position; // head = 베풂, tail = 소원
             float sqrDist = dir.sqrMagnitude;
             dir = Vector3.Normalize(dir);
 
-            Rigidbody otherTailRb = other.tailRb;
+            Rigidbody otherHeadRb = other.headRb;
 
-            float sign = 1f;
-
-            if (!matches.Contains(other))
+            if (matches.Contains(other))
             {
-                if (sqrDist < 4f)
+                tailRb.AddForce(dir, ForceMode.Force);
+                otherHeadRb.AddForce(-dir, ForceMode.Force);
+            }
+            else
+            {
+                if (sqrDist < 0.25f)
                 {
-                    sign /= -8f * sqrDist;
-                }
-                else
-                {
-                    sign = 0f;
+                    tailRb.AddForce(-4f * dir / sqrDist, ForceMode.Force);
+                    otherHeadRb.AddForce(4f * dir / sqrDist, ForceMode.Force);
                 }
             }
-
-            headRb.AddForce(sign * dir, ForceMode.Force);
-            otherTailRb.AddForce(sign * -dir, ForceMode.Force);
         }
     }
 
@@ -173,7 +170,12 @@ public class Rock : MonoBehaviour
     {
         foreach (Rock other in matches)
         {
-            Gizmos.DrawLine(head.position, other.tail.position);
+            Vector3 middle = 0.5f * (tail.position + other.head.position);
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(tail.position, middle);
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(middle, other.head.position);
         }
     }
 }
