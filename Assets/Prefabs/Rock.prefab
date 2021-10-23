@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 9156579177697192332}
   - component: {fileID: 9156579177697192329}
   - component: {fileID: 9156579177697192330}
-  - component: {fileID: 9156579177697192331}
+  - component: {fileID: 3189019426416673588}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -375,8 +375,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &9156579177697192331
-BoxCollider:
+--- !u!135 &3189019426416673588
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -384,9 +384,9 @@ BoxCollider:
   m_GameObject: {fileID: 9156579177697192333}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9156579177766899556
 GameObject:
@@ -547,7 +547,6 @@ GameObject:
   - component: {fileID: 9156579178452214038}
   - component: {fileID: 9156579178452214037}
   - component: {fileID: 9156579178452214036}
-  - component: {fileID: 9043532451529536268}
   m_Layer: 0
   m_Name: WishTransform
   m_TagString: Untagged
@@ -595,21 +594,6 @@ FixedJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9156579178452214039}
   m_ConnectedBody: {fileID: 9156579177906444607}
-  m_ConnectedArticulationBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 1
-  m_MassScale: 1
-  m_ConnectedMassScale: 1
---- !u!138 &9043532451529536268
-FixedJoint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9156579178452214039}
-  m_ConnectedBody: {fileID: 0}
   m_ConnectedArticulationBody: {fileID: 0}
   m_BreakForce: Infinity
   m_BreakTorque: Infinity

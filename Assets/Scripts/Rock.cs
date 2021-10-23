@@ -13,6 +13,7 @@ public class Rock : MonoBehaviour
     private Rigidbody wishRb, giftRb;
     private List<Rock> notYetChecked;
     private Rock previous, next;
+    private float distanceToNext = 0f, prevDistanceToNext = 0f;
     #endregion
 
     #region getters and setters
@@ -87,8 +88,8 @@ public class Rock : MonoBehaviour
 
     void Update()
     {
-        addForce();
         constrain();
+        addForce();
     }
 
     private void addForce()
@@ -96,26 +97,32 @@ public class Rock : MonoBehaviour
         if (next == null) return;
 
         Vector3 dir = next.giftTransform.position - this.wishTransform.position;
-        float sqrMag = dir.sqrMagnitude;
+        prevDistanceToNext = distanceToNext;
+        distanceToNext = dir.magnitude;
         dir.Normalize();
 
         float gravitationStrength = RockManager.instance.gravitationStrength;
-        gravitationStrength /= sqrMag;
-        this.wishRb.AddForce(dir * gravitationStrength, ForceMode.Force);
-        next.giftRb.AddForce(-dir * gravitationStrength, ForceMode.Force);
 
-        // if (sqrMag < 0.1f)
-        // {
-        //     wishTransform.GetComponents<FixedJoint>()[1].connectedBody = next.giftRb;
-        // }
+        if (distanceToNext > 1f)
+        {
+            this.wishRb.AddForce(dir * gravitationStrength, ForceMode.Force);
+            next.giftRb.AddForce(-dir * gravitationStrength, ForceMode.Force);
+        }
+        else if (prevDistanceToNext <= 1f)
+        {
+            this.wishRb.velocity = Vector3.zero;
+        }
     }
 
     private void constrain()
     {
-        Vector3 pos = transform.position;
-        float x = Mathf.Clamp(pos.x, EnvironmentSpecs.boundXLeft, EnvironmentSpecs.boundXRight);
-        float y = Mathf.Clamp(pos.y, EnvironmentSpecs.boundYBottom, EnvironmentSpecs.boundYTop);
-        transform.position = new Vector3(x, y, pos.z);
+        Vector3 pos = wishTransform.position;
+        if (pos.x < EnvironmentSpecs.boundXLeft) wishRb.AddForce(Vector3.right, ForceMode.Impulse);
+        if (pos.x > EnvironmentSpecs.boundXRight) wishRb.AddForce(Vector3.left, ForceMode.Impulse);
+        if (pos.y < EnvironmentSpecs.boundYBottom) wishRb.AddForce(Vector3.up, ForceMode.Impulse);
+        if (pos.y > EnvironmentSpecs.boundYTop) wishRb.AddForce(Vector3.down, ForceMode.Impulse);
+        if (pos.z < EnvironmentSpecs.boundZFront) wishRb.AddForce(Vector3.forward, ForceMode.Impulse);
+        if (pos.z > EnvironmentSpecs.boundZBack) wishRb.AddForce(Vector3.back, ForceMode.Impulse);
     }
 
     private void OnDrawGizmos()

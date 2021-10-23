@@ -11,7 +11,7 @@ public class RockManager : MonoSingleton<RockManager>
     public static event RockEvent AddRockAlert;
     public static List<Rock> Rocks;
     [SerializeField] private Rock rockPrefab;
-    public float gravitationStrength = 1;
+    public float gravitationStrength = 2;
     private int tempCurrentUserIndex = 0;
 
     private void Awake()
