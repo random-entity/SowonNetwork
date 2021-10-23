@@ -1,6 +1,4 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
 /// <summary>
 /// Mono singleton Class. Extend this class to make singleton component.

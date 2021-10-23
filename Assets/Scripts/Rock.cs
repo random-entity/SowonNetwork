@@ -6,66 +6,36 @@ public class Rock : MonoBehaviour
 {
     #region fields
     private string username;
-    private List<string> wishlist, mercylist;
-    private Text wishesText, merciesText, usernameText;
+    [SerializeField] private Text usernameText;
+    private int wishIndex, giftIndex;
+    [SerializeField] private Transform wishTransform, giftTransform, meshTransform; // head = gift, tail = wish
+    [SerializeField] private Transform wishEmoji, giftEmoji;
+    private Rigidbody wishRb, giftRb;
     private List<Rock> notYetChecked;
-    private List<Rock> matches;
-    public Transform head, tail; // head = 베풂, tail = 소원
-    [HideInInspector] public Rigidbody headRb, tailRb;
+    private Rock previous, next;
     #endregion
 
     #region getters and setters
-    public void setUsername(string username)
+    public void SetUsername(string username)
     {
         this.username = username;
         usernameText.text = this.username;
         gameObject.name = "ROCK_" + this.username;
     }
-    public List<string> getMercylist()
-    {
-        return mercylist;
-    }
-    private string getWishesString()
-    {
-        string wishes = "";
-        foreach (string wish in wishlist)
-        {
-            wishes += wish + " ";
-        }
-        return wishes;
-    }
-    private string getMerciesString()
-    {
-        string mercies = "";
-        foreach (string mercy in mercylist)
-        {
-            mercies += mercy + " ";
-        }
-        return mercies;
-    }
     #endregion
 
     #region methods for initializing data
-    private void addData(string input, List<string> list)
+    public void SetWishAndGift(int wishIndex, int giftIndex)
     {
-        string[] splitInput = input.Split(' ');
-        foreach (string s in splitInput)
-        {
-            list.Add(s);
-        }
+        this.wishIndex = wishIndex;
+        this.giftIndex = giftIndex;
+        wishEmoji.GetComponent<MeshRenderer>().material.SetTexture("_MainTex", RockManager.instance.emojiTextures[wishIndex]);
+        giftEmoji.GetComponent<MeshRenderer>().material.SetTexture("_MainTex", RockManager.instance.emojiTextures[giftIndex]);
     }
-    public void addWishData(string input)
+    public void SetMeshAndTexture(int meshIndex, int textureIndex)
     {
-        addData(input, wishlist);
-    }
-    public void addMercyData(string input)
-    {
-        addData(input, mercylist);
-    }
-    public void setMesh(int index)
-    {
-        head.GetComponent<MeshFilter>().mesh = MeshSelector.instance.meshesHead[index];
-        tail.GetComponent<MeshFilter>().mesh = MeshSelector.instance.meshesTail[index];
+        meshTransform.GetComponent<MeshFilter>().mesh = RockManager.instance.meshPresets[meshIndex];
+        meshTransform.GetComponent<MeshRenderer>().material.SetTexture("_MainTex", RockManager.instance.texturePresets[textureIndex]);
     }
     #endregion
 
@@ -80,7 +50,7 @@ public class Rock : MonoBehaviour
     }
     private void OnAddRock(Rock newRock)
     {
-        if (newRock != this)
+        if (newRock != this && next == null)
         {
             notYetChecked.Add(newRock);
             searchMatch();
@@ -90,92 +60,72 @@ public class Rock : MonoBehaviour
 
     private void Awake()
     {
-        wishlist = new List<string>();
-        mercylist = new List<string>();
         notYetChecked = new List<Rock>();
-        matches = new List<Rock>();
-
-        Text[] texts = GetComponentsInChildren<Text>();
-        wishesText = texts[0];
-        merciesText = texts[1];
-        usernameText = texts[2];
-
-        Rigidbody[] rbs = GetComponentsInChildren<Rigidbody>();
-        headRb = head.GetComponent<Rigidbody>();
-        tailRb = tail.GetComponent<Rigidbody>();
+        previous = null;
+        next = null;
+        Text usernameText = GetComponentInChildren<Text>();
+        wishRb = wishTransform.GetComponent<Rigidbody>();
+        giftRb = giftTransform.GetComponent<Rigidbody>();
     }
-    private void Start()
-    {
-        wishesText.text = getWishesString();
-        merciesText.text = getMerciesString();
-    }
-
     private void searchMatch() // 나의 소원(tail) => 남의 베풂(head)
     {
-        foreach (string myWish in wishlist)
+        if (next == null)
         {
             foreach (Rock other in notYetChecked)
             {
-                foreach (string othersmercy in other.getMercylist())
+                if (other == this) continue;
+
+                if (other.previous == null && other.giftIndex == this.wishIndex)
                 {
-                    if (othersmercy == myWish)
-                    {
-                        matches.Add(other);
-                    }
+                    next = other;
+                    other.previous = this;
                 }
             }
+            notYetChecked.Clear();
         }
-        notYetChecked.Clear();
     }
 
     void Update()
     {
         addForce();
+        constrain();
     }
 
     private void addForce()
     {
-        foreach (Rock other in RockManager.rockList)
-        {
-            if (other == this) continue;
+        if (next == null) return;
 
-            Vector3 dir = other.head.position - tail.position; // head = 베풂, tail = 소원
-            float sqrDist = dir.sqrMagnitude;
-            dir = Vector3.Normalize(dir);
+        Vector3 dir = next.giftTransform.position - this.wishTransform.position;
+        float sqrMag = dir.sqrMagnitude;
+        dir.Normalize();
 
-            Rigidbody otherHeadRb = other.headRb;
+        float gravitationStrength = RockManager.instance.gravitationStrength;
+        gravitationStrength /= sqrMag;
+        this.wishRb.AddForce(dir * gravitationStrength, ForceMode.Force);
+        next.giftRb.AddForce(-dir * gravitationStrength, ForceMode.Force);
 
-            if (matches.Contains(other))
-            {
-                tailRb.AddForce(dir, ForceMode.Force);
-                otherHeadRb.AddForce(-dir, ForceMode.Force);
-            }
-            else
-            {
-                if (sqrDist < 0.25f)
-                {
-                    tailRb.AddForce(-4f * dir / sqrDist, ForceMode.Force);
-                    otherHeadRb.AddForce(4f * dir / sqrDist, ForceMode.Force);
-                }
-            }
-        }
+        // if (sqrMag < 0.1f)
+        // {
+        //     wishTransform.GetComponents<FixedJoint>()[1].connectedBody = next.giftRb;
+        // }
     }
 
     private void constrain()
     {
-        // if(transform.)
+        Vector3 pos = transform.position;
+        float x = Mathf.Clamp(pos.x, EnvironmentSpecs.boundXLeft, EnvironmentSpecs.boundXRight);
+        float y = Mathf.Clamp(pos.y, EnvironmentSpecs.boundYBottom, EnvironmentSpecs.boundYTop);
+        transform.position = new Vector3(x, y, pos.z);
     }
 
     private void OnDrawGizmos()
     {
-        foreach (Rock other in matches)
-        {
-            Vector3 middle = 0.5f * (tail.position + other.head.position);
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(tail.position, middle);
+        if (next == null) return;
 
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(middle, other.head.position);
-        }
+        Vector3 middle = 0.5f * (wishTransform.position + next.giftTransform.position);
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(wishTransform.position, middle);
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(middle, next.giftTransform.position);
     }
 }
