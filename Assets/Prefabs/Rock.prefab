@@ -251,6 +251,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9156579177464262411}
   - component: {fileID: 9156579177464262412}
+  - component: {fileID: 6303191288567880328}
   m_Layer: 0
   m_Name: Rock
   m_TagString: Untagged
@@ -293,6 +294,19 @@ MonoBehaviour:
   wishEmoji: {fileID: 4310107672002397269}
   giftEmoji: {fileID: 4699992622339518682}
   textCanvas: {fileID: 9156579177766899555}
+--- !u!65 &6303191288567880328
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9156579177464262415}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9156579177697192333
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,8 +5,10 @@ public class MouseToCamera : MonoBehaviour
     private Vector3 panOrigin;
     private Vector3 oldPos;
     [SerializeField] private float panSpeed;
-    [SerializeField] float minFov = 15f;
-    [SerializeField] float maxFov = 90f;
+    // [SerializeField] float minFov = 15f;
+    // [SerializeField] float maxFov = 90f;
+    [SerializeField] float minZ;
+    [SerializeField] float maxZ;
     [SerializeField] float zoomSensitivity;
     private void Update()
     {
@@ -30,9 +32,17 @@ public class MouseToCamera : MonoBehaviour
 
     private void mouseZoom()
     {
-        float fov = Camera.main.fieldOfView;
-        fov -= Input.GetAxis("Mouse ScrollWheel") * zoomSensitivity;
-        fov = Mathf.Clamp(fov, minFov, maxFov);
-        Camera.main.fieldOfView = fov;
+        // float fov = Camera.main.fieldOfView;
+        // fov -= Input.GetAxis("Mouse ScrollWheel") * zoomSensitivity;
+        // fov = Mathf.Clamp(fov, minFov, maxFov);
+        // Camera.main.fieldOfView = fov;
+
+        Vector3 pos = transform.position;
+        pos.z += Input.GetAxis("Mouse ScrollWheel") * zoomSensitivity;
+        pos.z = Mathf.Clamp(pos.z, minZ, maxZ);
+        pos.x = Mathf.Clamp(pos.x, EnvironmentSpecs.boundXLeft, EnvironmentSpecs.boundXRight);
+        pos.y = Mathf.Clamp(pos.y, EnvironmentSpecs.boundYBottomSinked, EnvironmentSpecs.boundYTop);
+
+        transform.position = new Vector3(pos.x, pos.y, pos.z);
     }
 }

@@ -15,7 +15,8 @@ public class RockManager : MonoSingleton<RockManager>
     public static List<Rock> Rocks;
     public static List<LinkedList<Rock>> Chains;
     public static Dictionary<LinkedList<Rock>, Vector3> ChainToWanderForce;
-    [SerializeField] private float minWanderForce = 0.1f, maxWanderForce = 0.5f;
+    [SerializeField] private float minWanderForce = 0.05f, maxWanderForce = 0.1f;
+    [SerializeField] private Camera mainCam;
 
     private IEnumerator setRandomWanderData()
     {
@@ -43,7 +44,7 @@ public class RockManager : MonoSingleton<RockManager>
 
     public Rock AddRock(string username, int wishIndex, int giftIndex)
     {
-        Rock newRock = Instantiate(rockPrefab, new Vector3(Random.Range(EnvironmentSpecs.boundXLeft, EnvironmentSpecs.boundXRight), Random.Range(EnvironmentSpecs.boundYBottom, EnvironmentSpecs.boundYTop), 0f), Quaternion.identity);
+        Rock newRock = Instantiate(rockPrefab, new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0f), Quaternion.identity); //new Vector3(Random.Range(EnvironmentSpecs.boundXLeft, EnvironmentSpecs.boundXRight), Random.Range(EnvironmentSpecs.boundYBottom, EnvironmentSpecs.boundYTop), 0f), Quaternion.identity);
 
         newRock.SetUsername(username);
 
