@@ -18,28 +18,29 @@ public class Rock : MonoBehaviour
     #endregion
 
     #region Linked List Tower
-    public LinkedList<Rock> parentTower;
+    public LinkedList<Rock> parentChain;
+    private bool sinked = false;
     private Rock getNext()
     {
-        if (parentTower == null) return null;
-        if (parentTower.Find(this) == null)
+        if (parentChain == null) return null;
+        if (parentChain.Find(this) == null)
         {
             Debug.LogWarning("parentTower.Find(this) == null");
             return null;
         }
-        if (parentTower.Find(this).Next == null) return null;
-        return parentTower.Find(this).Next.Value;
+        if (parentChain.Find(this).Next == null) return null;
+        return parentChain.Find(this).Next.Value;
     }
     private Rock getPrevious()
     {
-        if (parentTower == null) return null;
-        if (parentTower.Find(this) == null)
+        if (parentChain == null) return null;
+        if (parentChain.Find(this) == null)
         {
             Debug.LogWarning("parentTower.Find(this) == null");
             return null;
         }
-        if (parentTower.Find(this).Previous == null) return null;
-        return parentTower.Find(this).Previous.Value;
+        if (parentChain.Find(this).Previous == null) return null;
+        return parentChain.Find(this).Previous.Value;
     }
     #endregion
 
@@ -89,10 +90,10 @@ public class Rock : MonoBehaviour
     private void Awake()
     {
         notYetChecked = new List<Rock>();
-        parentTower = new LinkedList<Rock>();
-        parentTower.AddFirst(this);
-        RockManager.Chains.Add(parentTower);
-        RockManager.ChainToWanderForce[parentTower] = Vector3.down;
+        parentChain = new LinkedList<Rock>();
+        parentChain.AddFirst(this);
+        RockManager.Chains.Add(parentChain);
+        RockManager.ChainToWanderForce[parentChain] = Vector3.down;
         Text usernameText = GetComponentInChildren<Text>();
         wishRb = wishTransform.GetComponent<Rigidbody>();
         giftRb = giftTransform.GetComponent<Rigidbody>();
@@ -105,17 +106,27 @@ public class Rock : MonoBehaviour
             foreach (Rock other in notYetChecked)
             {
                 if (other == this) continue;
+                if (other.parentChain == null)
 
-                if (other.getPrevious() == null && other.giftIndex == this.wishIndex)
-                {
-                    foreach (var othersChainElements in other.parentTower)
+                    if (other.getPrevious() == null && other.giftIndex == this.wishIndex)
                     {
-                        this.parentTower.AddLast(othersChainElements);
-                        RockManager.Chains.Remove(othersChainElements.parentTower);
-                        othersChainElements.parentTower = this.parentTower;
-                        break;
+                        foreach (var othersChainElements in other.parentChain)
+                        {
+                            Debug.Log("minki : " + other.parentChain.Count);
+                            this.parentChain.AddLast(othersChainElements);
+                            RockManager.Chains.Remove(othersChainElements.parentChain);
+                            othersChainElements.parentChain = this.parentChain;
+                            break;
+                        }
+
+                        if (other.wishIndex == this.parentChain.First.Value.giftIndex)
+                        {
+                            foreach (var chainElements in this.parentChain)
+                            {
+                                
+                            }
+                        }
                     }
-                }
             }
 
             notYetChecked.Clear();
@@ -128,11 +139,11 @@ public class Rock : MonoBehaviour
         addForce();
         wander();
 
-        if (parentTower.First.Value == this)
+        if (parentChain.First.Value == this)
         {
             material.color = Color.green;
         }
-        else if (parentTower.Last.Value == this)
+        else if (parentChain.Last.Value == this)
         {
             material.color = Color.red;
         }
@@ -143,6 +154,7 @@ public class Rock : MonoBehaviour
     }
 
     #region Physics
+    // private void
     private void addForce()
     {
         foreach (Rock other in RockManager.Rocks)
@@ -174,7 +186,7 @@ public class Rock : MonoBehaviour
             {
                 float compulseThreshold = 0f;
 
-                if (parentTower.Contains(other))
+                if (parentChain.Contains(other))
                 {
                     compulseThreshold = 1.5f;
                 }
@@ -194,7 +206,7 @@ public class Rock : MonoBehaviour
 
     private void wander()
     {
-        this.giftRb.AddForce(RockManager.ChainToWanderForce[parentTower], ForceMode.Force);
+        this.giftRb.AddForce(RockManager.ChainToWanderForce[parentChain], ForceMode.Force);
     }
 
     private void constrain()
