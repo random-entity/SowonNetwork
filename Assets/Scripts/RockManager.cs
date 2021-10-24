@@ -40,7 +40,7 @@ public class RockManager : MonoSingleton<RockManager>
         StartCoroutine(setRandomWanderData());
     }
 
-    public void AddRock(string username, int wishIndex, int giftIndex)
+    public Rock AddRock(string username, int wishIndex, int giftIndex)
     {
         Rock newRock = Instantiate(rockPrefab, new Vector3(Random.Range(EnvironmentSpecs.boundXLeft, EnvironmentSpecs.boundXRight), Random.Range(EnvironmentSpecs.boundYBottom, EnvironmentSpecs.boundYTop), 0f), Quaternion.identity);
 
@@ -54,6 +54,8 @@ public class RockManager : MonoSingleton<RockManager>
         AddRockAlert(newRock);
 
         tempCurrentUserIndex++;
+
+        return newRock;
     }
 
     private void Update()
