@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class EmojiButtonManager : MonoSingleton<EmojiButtonManager>
 {
-    Texture[] emojiTextures;
+    private Texture[] emojiTextures;
+    [SerializeField] private Sprite[] emojiSprites;
     [SerializeField] private RectTransform addRockPanel;
     [SerializeField] private Button buttonPrefab;
     private Button[] buttons;
@@ -24,13 +25,14 @@ public class EmojiButtonManager : MonoSingleton<EmojiButtonManager>
             b.transform.SetParent(addRockPanel.transform);
             buttons[i] = b;
             b.GetComponent<EmojiButton>().index = i;
+            b.image.sprite = emojiSprites[i];
 
             int x = i % 5;
             int y = i / 5;
 
             b.GetComponent<RectTransform>().position = new Vector3(
-                (float)Screen.width * Mathf.Lerp(0.2f, 0.8f, (float)x / 4f),
-                (float)Screen.height * Mathf.Lerp(0.4f, 0.2f, (float)y / 4f),
+                (float)Screen.width * Mathf.Lerp(0.4f, 0.6f, (float)x / 4f),
+                (float)Screen.height * Mathf.Lerp(0.6f, 0.3f, (float)y / 4f),
                 -1f
             );
         }

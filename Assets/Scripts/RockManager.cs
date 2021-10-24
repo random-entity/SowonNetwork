@@ -11,6 +11,7 @@ public class RockManager : MonoSingleton<RockManager>
     public Texture[] emojiTextures;
     public static event RockEvent AddRockAlert;
     [SerializeField] private Rock rockPrefab;
+    [SerializeField] private Transform rockParentTransform;
     public static List<Rock> Rocks;
     public static List<LinkedList<Rock>> Chains;
     public static Dictionary<LinkedList<Rock>, Vector3> ChainToWanderForce;
@@ -49,6 +50,8 @@ public class RockManager : MonoSingleton<RockManager>
         newRock.SetMeshAndTexture(Random.Range(0, meshPresets.Length), Random.Range(0, texturePresets.Length));
         newRock.SetWishAndGift(wishIndex, giftIndex);
 
+        newRock.transform.SetParent(rockParentTransform);
+
         Rocks.Add(newRock);
 
         AddRockAlert(newRock);
@@ -58,9 +61,17 @@ public class RockManager : MonoSingleton<RockManager>
         return newRock;
     }
 
+    public void SetAllRocksInfoDisplay(bool on)
+    {
+        foreach (Rock rock in Rocks)
+        {
+            rock.SetInfoDisplay(on);
+        }
+    }
+
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.Equals))
         {
             AddRock("USER" + tempCurrentUserIndex, Random.Range(0, emojiTextures.Length), Random.Range(0, emojiTextures.Length));
 

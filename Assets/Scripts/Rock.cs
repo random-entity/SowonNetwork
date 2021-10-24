@@ -9,7 +9,7 @@ public class Rock : MonoBehaviour
     [SerializeField] private Text usernameText;
     private int wishIndex, giftIndex;
     [SerializeField] private Transform wishTransform, giftTransform, meshTransform; // head = gift, tail = wish
-    [SerializeField] private Transform wishEmoji, giftEmoji;
+    [SerializeField] private Transform wishEmoji, giftEmoji, textCanvas;
     private Rigidbody wishRb, giftRb;
     private Material material;
     private List<Rock> notYetChecked;
@@ -84,6 +84,13 @@ public class Rock : MonoBehaviour
             searchMatch();
         }
     }
+
+    public void SetInfoDisplay(bool on)
+    {
+        textCanvas.gameObject.SetActive(on);
+        wishEmoji.gameObject.SetActive(on);
+        giftEmoji.gameObject.SetActive(on);
+    }
     #endregion
 
     private void Awake()
@@ -145,30 +152,14 @@ public class Rock : MonoBehaviour
 
         if (sinked)
         {
-            material.color = Color.yellow;
             if (parentChain.First.Value == this)
             {
                 compulseBetweenSinkedRoots();
-
-                material.color = Color.blue;
             }
         }
         else
         {
             wander();
-
-            if (parentChain.First.Value == this)
-            {
-                material.color = Color.green;
-            }
-            else if (parentChain.Last.Value == this)
-            {
-                material.color = Color.red;
-            }
-            else
-            {
-                material.color = Color.white;
-            }
         }
     }
 
