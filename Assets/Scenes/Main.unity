@@ -853,7 +853,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panSpeed: 10
-  minZ: -30
+  minZ: -50
   maxZ: -4
   zoomSensitivity: 1
 --- !u!20 &963194227
@@ -907,7 +907,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: -7}
+  m_LocalPosition: {x: 0, y: 27.5, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1365,8 +1365,8 @@ MonoBehaviour:
   - {fileID: 2800000, guid: c4307a53956aa4cca80363faf0bdb85e, type: 3}
   rockPrefab: {fileID: 9156579177464262412, guid: 138ddd801a3224547b9c50d05ec195d3, type: 3}
   rockParentTransform: {fileID: 292574145}
-  minWanderForce: 0.5
-  maxWanderForce: 1
+  minWanderForce: 2
+  maxWanderForce: 8
   mainCam: {fileID: 963194227}
 --- !u!4 &1574155797
 Transform:

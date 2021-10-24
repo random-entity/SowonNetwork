@@ -115,11 +115,11 @@ public class Rock : MonoBehaviour
             {
                 if (other == this) continue;
 
-                if (other.getPrevious() == null && other.giftIndex == this.wishIndex)
+                if (other.getPrevious() == null && other.wishIndex == this.giftIndex)
                 {
                     foreach (var currentChainElements in this.parentChain)
                     {
-                        currentChainElements.transform.localScale *= 1.1f;
+                        currentChainElements.transform.localScale *= 1.2f;
                     }
                     foreach (var othersChainElements in other.parentChain)
                     {
@@ -130,7 +130,7 @@ public class Rock : MonoBehaviour
 
                     if (parentChain.Count >= 3)
                     {
-                        if (other.wishIndex == this.parentChain.First.Value.giftIndex)
+                        if (other.giftIndex == this.parentChain.First.Value.wishIndex)
                         {
                             foreach (var chainElements in this.parentChain)
                             {
@@ -228,7 +228,10 @@ public class Rock : MonoBehaviour
         {
             if (parentChain.First.Value == this)
             {
-                this.wishRb.AddForce(Vector3.down * 8f, ForceMode.Force);
+                if (this.wishRb.position.y > EnvironmentSpecs.boundYBottomSinked + 1f)
+                {
+                    this.wishRb.AddForce(Vector3.down * 8f, ForceMode.Force);
+                }
             }
             else
             {
@@ -266,9 +269,9 @@ public class Rock : MonoBehaviour
         if (getNext() == null) return;
 
         Vector3 middle = 0.5f * (wishTransform.position + getNext().giftTransform.position);
-        Gizmos.color = Color.red;
+        Gizmos.color = sinked ? Color.cyan : Color.red;
         Gizmos.DrawLine(wishTransform.position, middle);
-        Gizmos.color = Color.green;
+        Gizmos.color = sinked ? Color.yellow : Color.green;
         Gizmos.DrawLine(middle, getNext().giftTransform.position);
     }
 }
