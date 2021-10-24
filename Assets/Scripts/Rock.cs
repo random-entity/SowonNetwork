@@ -12,8 +12,9 @@ public class Rock : MonoBehaviour
     [SerializeField] private Transform wishTransform, giftTransform, meshTransform; // head = gift, tail = wish
     [SerializeField] private Transform wishEmoji, giftEmoji;
     private Rigidbody wishRb, giftRb;
+    private Material material;
     private List<Rock> notYetChecked;
-    private float distanceToNext = 0f, prevDistanceToNext = 0f;
+    private float sqrDistanceToNext = 0f, prevSqrDistanceToNext = 0f;
     #endregion
 
     #region Linked List Tower
@@ -95,6 +96,7 @@ public class Rock : MonoBehaviour
         Text usernameText = GetComponentInChildren<Text>();
         wishRb = wishTransform.GetComponent<Rigidbody>();
         giftRb = giftTransform.GetComponent<Rigidbody>();
+        material = GetComponentInChildren<MeshRenderer>().material;
     }
     private void searchMatch() // 나의 소원(tail) => 남의 베풂(head)
     {
@@ -113,38 +115,6 @@ public class Rock : MonoBehaviour
                         othersChainElements.parentTower = this.parentTower;
                         break;
                     }
-                    // if (this.parentTower == null)
-                    // {
-                    //     if (other.parentTower == null)
-                    //     {
-                    //         this.parentTower = new LinkedList<Rock>();
-                    //         this.parentTower.AddFirst(this);
-                    //         this.parentTower.AddLast(other);
-                    //         other.parentTower = this.parentTower;
-                    //         RockManager.Chains.Add(this.parentTower);
-                    //     }
-                    //     else
-                    //     {
-                    //         other.parentTower.AddFirst(this);
-                    //         this.parentTower = other.parentTower;
-                    //     }
-                    //     break;
-                    // }
-                    // else
-                    // {
-                    //     if (other.parentTower == null)
-                    //     {
-                    //         this.parentTower.AddLast(other);
-                    //         other.parentTower = this.parentTower;
-                    //     }
-                    //     else
-                    //     {
-                    //         RockManager.Chains.Remove(other.parentTower);
-
-
-                    //     }
-                    //     break;
-                    // }
                 }
             }
 
@@ -157,6 +127,19 @@ public class Rock : MonoBehaviour
         constrain();
         addForce();
         wander();
+
+        if (parentTower.First.Value == this)
+        {
+            material.color = Color.green;
+        }
+        else if (parentTower.Last.Value == this)
+        {
+            material.color = Color.red;
+        }
+        else
+        {
+            material.color = Color.white;
+        }
     }
 
     #region Physics
@@ -167,32 +150,43 @@ public class Rock : MonoBehaviour
             if (other == this) continue;
 
             Vector3 dir = other.giftTransform.position - this.wishTransform.position;
-            float dist = dir.magnitude;
+            float sqrDist = dir.sqrMagnitude;
             dir.Normalize();
 
             float gravitationStrength = RockManager.instance.gravitationStrength;
 
             if (other == getNext())
             {
-                prevDistanceToNext = distanceToNext;
-                distanceToNext = dist;
+                prevSqrDistanceToNext = sqrDistanceToNext;
+                sqrDistanceToNext = sqrDist;
 
-                if (distanceToNext > 1f)
+                if (sqrDistanceToNext > 0.5f)
                 {
                     this.wishRb.AddForce(dir * gravitationStrength, ForceMode.Force);
                     getNext().giftRb.AddForce(-dir * gravitationStrength, ForceMode.Force);
                 }
-                else if (prevDistanceToNext <= 1f)
+                else if (prevSqrDistanceToNext <= 0.5f)
                 {
                     this.wishRb.velocity = Vector3.zero;
                 }
             }
             else
             {
-                if (dist < 5f)
+                float compulseThreshold = 0f;
+
+                if (parentTower.Contains(other))
                 {
-                    this.wishRb.AddForce(-dir * gravitationStrength / (0.1f + dist), ForceMode.Force);
-                    other.giftRb.AddForce(dir * gravitationStrength / (0.1f + dist), ForceMode.Force);
+                    compulseThreshold = 1.5f;
+                }
+                else
+                {
+                    compulseThreshold = 8f;
+                }
+
+                if (sqrDist < compulseThreshold)
+                {
+                    this.wishRb.AddForce(-dir * gravitationStrength / (0.1f + sqrDist), ForceMode.Force);
+                    other.giftRb.AddForce(dir * gravitationStrength / (0.1f + sqrDist), ForceMode.Force);
                 }
             }
         }
@@ -200,10 +194,7 @@ public class Rock : MonoBehaviour
 
     private void wander()
     {
-        if (parentTower != null)
-        {
-            this.wishRb.AddForce(RockManager.ChainToWanderForce[parentTower], ForceMode.Force);
-        }
+        this.giftRb.AddForce(RockManager.ChainToWanderForce[parentTower], ForceMode.Force);
     }
 
     private void constrain()

@@ -408,6 +408,8 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 25420d21a03ff4f5fb36854a5053d428, type: 3}
   - {fileID: 2800000, guid: 30c3f79c060f1499aa9e85561a352928, type: 3}
   rockPrefab: {fileID: 9156579177464262412, guid: 138ddd801a3224547b9c50d05ec195d3, type: 3}
+  minWanderForce: 4
+  maxWanderForce: 6
   gravitationStrength: 8
 --- !u!4 &1574155797
 Transform:
