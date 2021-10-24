@@ -14,7 +14,7 @@ public class RockManager : MonoSingleton<RockManager>
     public static List<Rock> Rocks;
     public static List<LinkedList<Rock>> Chains;
     public static Dictionary<LinkedList<Rock>, Vector3> ChainToWanderForce;
-    [SerializeField] private float minWanderForce = 1, maxWanderForce = 2;
+    [SerializeField] private float minWanderForce = 0.1f, maxWanderForce = 0.5f;
 
     private IEnumerator setRandomWanderData()
     {
@@ -25,13 +25,11 @@ public class RockManager : MonoSingleton<RockManager>
             Vector3 direction = new Vector3(x, y, 0f).normalized;
             float magnitude = Random.Range(minWanderForce, maxWanderForce);
             ChainToWanderForce[chain] = direction * magnitude;
-            Debug.Log("Chain with root " + chain.First.Value.gameObject.name + " wander force set to " + ChainToWanderForce[chain].ToString());
         }
         yield return new WaitForSeconds(2f);
         StopAllCoroutines();
         StartCoroutine(setRandomWanderData());
     }
-    public float gravitationStrength = 1.5f;
     private int tempCurrentUserIndex = 0;
 
     private void Awake()
