@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,10 +13,10 @@ public class Rock : MonoBehaviour
     private Rigidbody wishRb, giftRb;
     private Material material;
     private List<Rock> notYetChecked;
-    private float sqrDistanceToNext = 0f, prevSqrDistanceToNext = 0f;
+    private float DistanceToNext = 0f, prevDistanceToNext = 0f;
     #endregion
 
-    #region Linked List Tower
+    #region Linked List Chain
     public LinkedList<Rock> parentChain;
     private bool sinked = false;
     private Rock getNext()
@@ -111,6 +110,10 @@ public class Rock : MonoBehaviour
 
                 if (other.getPrevious() == null && other.giftIndex == this.wishIndex)
                 {
+                    foreach (var currentChainElements in this.parentChain)
+                    {
+                        currentChainElements.transform.localScale *= 1.1f;
+                    }
                     foreach (var othersChainElements in other.parentChain)
                     {
                         this.parentChain.AddLast(othersChainElements);
@@ -118,11 +121,14 @@ public class Rock : MonoBehaviour
                         othersChainElements.parentChain = this.parentChain;
                     }
 
-                    if (other.wishIndex == this.parentChain.First.Value.giftIndex)
+                    if (parentChain.Count >= 3)
                     {
-                        foreach (var chainElements in this.parentChain)
+                        if (other.wishIndex == this.parentChain.First.Value.giftIndex)
                         {
-                            chainElements.sinked = true;
+                            foreach (var chainElements in this.parentChain)
+                            {
+                                chainElements.sinked = true;
+                            }
                         }
                     }
                 }
@@ -135,15 +141,20 @@ public class Rock : MonoBehaviour
     void Update()
     {
         constrain();
+        addForce();
 
         if (sinked)
         {
-            addForceSinked();
             material.color = Color.yellow;
+            if (parentChain.First.Value == this)
+            {
+                compulseBetweenSinkedRoots();
+
+                material.color = Color.blue;
+            }
         }
         else
         {
-            addForce();
             wander();
 
             if (parentChain.First.Value == this)
@@ -162,36 +173,28 @@ public class Rock : MonoBehaviour
     }
 
     #region Physics
-    private void addForceSinked()
+    private void attractNext(float strength)
     {
+        if (this.getNext() == null) return;
+        Rock next = this.getNext();
 
-    }
-
-    private void attract(Rock other, float strength)
-    {
-        if (other == this) return;
-
-        Vector3 dir = other.giftTransform.position - this.wishTransform.position;
-        float sqrDist = dir.sqrMagnitude;
+        Vector3 dir = next.giftTransform.position - this.wishTransform.position;
+        float dist = dir.magnitude;
         dir.Normalize();
 
-        float gravitationStrength = RockManager.instance.gravitationStrength * strength;
+        strength *= dist; // dist > 1f ? dist : -dist;
+        next.wishRb.AddForce(-dir * strength, ForceMode.Force);
 
-        prevSqrDistanceToNext = sqrDistanceToNext;
-        sqrDistanceToNext = sqrDist;
+        prevDistanceToNext = DistanceToNext;
+        DistanceToNext = dist;
 
-        if (sqrDistanceToNext > 0.5f)
-        {
-            this.wishRb.AddForce(dir * gravitationStrength, ForceMode.Force);
-            getNext().giftRb.AddForce(-dir * gravitationStrength, ForceMode.Force);
-        }
-        else if (prevSqrDistanceToNext <= 0.5f)
+        if (DistanceToNext > 0.5f && prevDistanceToNext <= 0.5f)
         {
             this.wishRb.velocity = Vector3.zero;
         }
     }
 
-    private void compulse(Rock other)
+    private void compulse(Rock other, float strength)
     {
         if (other == this) return;
 
@@ -199,48 +202,46 @@ public class Rock : MonoBehaviour
         float sqrDist = dir.sqrMagnitude;
         dir.Normalize();
 
-        float gravitationStrength = RockManager.instance.gravitationStrength;
-
-        float compulseThreshold = 0f;
-
-        if (parentChain.Contains(other))
-        {
-            compulseThreshold = 1.5f;
-        }
-        else
-        {
-            compulseThreshold = 8f;
-        }
+        float compulseThreshold = parentChain.Contains(other) ? 1.5f : 8f;
 
         if (sqrDist < compulseThreshold)
         {
-            this.wishRb.AddForce(-dir * gravitationStrength / (0.1f + sqrDist), ForceMode.Force);
-            other.giftRb.AddForce(dir * gravitationStrength / (0.1f + sqrDist), ForceMode.Force);
+            this.wishRb.AddForce(-dir * strength / (0.1f + sqrDist), ForceMode.Force);
+            other.giftRb.AddForce(dir * strength / (0.1f + sqrDist), ForceMode.Force);
         }
     }
-    private void addForce()
+
+    private void compulseBetweenSinkedRoots()
     {
         foreach (Rock other in RockManager.Rocks)
         {
-            if (other == getNext())
+            if (other == this) continue;
+
+            if (other.sinked && other.parentChain.First.Value)
             {
-                attract(other, 1f);
+                compulse(other, 5f);
             }
-            else
-            {
-                compulse(other);
-            }
+        }
+    }
+
+    private void addForce()
+    {
+        attractNext(3f);
+
+        foreach (Rock other in RockManager.Rocks)
+        {
+            compulse(other, 1f);
         }
 
         if (sinked)
         {
             if (parentChain.First.Value == this)
             {
-                this.wishRb.AddForce(Vector3.down * 10f, ForceMode.Force);
+                this.wishRb.AddForce(Vector3.down * 8f, ForceMode.Force);
             }
             else
             {
-                this.wishRb.AddForce(Vector3.up * 1f, ForceMode.Force);
+                this.wishRb.AddForce(Vector3.up * 7f, ForceMode.Force);
             }
         }
     }
@@ -252,10 +253,17 @@ public class Rock : MonoBehaviour
 
     private void constrain()
     {
-        Vector3 pos = wishTransform.position;
+        Vector3 pos = giftTransform.position;
         if (pos.x < EnvironmentSpecs.boundXLeft) wishRb.AddForce(Vector3.right, ForceMode.Impulse);
         if (pos.x > EnvironmentSpecs.boundXRight) wishRb.AddForce(Vector3.left, ForceMode.Impulse);
-        if (pos.y < EnvironmentSpecs.boundYBottom) wishRb.AddForce(Vector3.up, ForceMode.Impulse);
+        if (sinked)
+        {
+            if (pos.y < EnvironmentSpecs.boundYBottomSinked) giftTransform.position = new Vector3(pos.x, EnvironmentSpecs.boundYBottomSinked, pos.z); // wishRb.AddForce(Vector3.up, ForceMode.Impulse);
+        }
+        else
+        {
+            if (pos.y < EnvironmentSpecs.boundYBottom) wishRb.AddForce(Vector3.up, ForceMode.Impulse);
+        }
         if (pos.y > EnvironmentSpecs.boundYTop) wishRb.AddForce(Vector3.down, ForceMode.Impulse);
         if (pos.z < EnvironmentSpecs.boundZFront) wishRb.AddForce(Vector3.forward, ForceMode.Impulse);
         if (pos.z > EnvironmentSpecs.boundZBack) wishRb.AddForce(Vector3.back, ForceMode.Impulse);

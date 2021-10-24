@@ -292,7 +292,6 @@ MonoBehaviour:
   meshTransform: {fileID: 9156579177697192332}
   wishEmoji: {fileID: 4310107672002397269}
   giftEmoji: {fileID: 4699992622339518682}
-  wanderForce: 50
 --- !u!1 &9156579177697192333
 GameObject:
   m_ObjectHideFlags: 0
@@ -530,7 +529,7 @@ Rigidbody:
   m_GameObject: {fileID: 9156579177906444593}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 1
+  m_Drag: 2
   m_AngularDrag: 40
   m_UseGravity: 0
   m_IsKinematic: 0
@@ -580,7 +579,7 @@ Rigidbody:
   m_GameObject: {fileID: 9156579178452214039}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 1
+  m_Drag: 2
   m_AngularDrag: 40
   m_UseGravity: 0
   m_IsKinematic: 0
