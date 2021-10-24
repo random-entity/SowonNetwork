@@ -101,32 +101,31 @@ public class Rock : MonoBehaviour
     }
     private void searchMatch() // 나의 소원(tail) => 남의 베풂(head)
     {
+        if (sinked) return;
+
         if (getNext() == null)
         {
             foreach (Rock other in notYetChecked)
             {
                 if (other == this) continue;
-                if (other.parentChain == null)
 
-                    if (other.getPrevious() == null && other.giftIndex == this.wishIndex)
+                if (other.getPrevious() == null && other.giftIndex == this.wishIndex)
+                {
+                    foreach (var othersChainElements in other.parentChain)
                     {
-                        foreach (var othersChainElements in other.parentChain)
-                        {
-                            Debug.Log("minki : " + other.parentChain.Count);
-                            this.parentChain.AddLast(othersChainElements);
-                            RockManager.Chains.Remove(othersChainElements.parentChain);
-                            othersChainElements.parentChain = this.parentChain;
-                            break;
-                        }
+                        this.parentChain.AddLast(othersChainElements);
+                        RockManager.Chains.Remove(othersChainElements.parentChain);
+                        othersChainElements.parentChain = this.parentChain;
+                    }
 
-                        if (other.wishIndex == this.parentChain.First.Value.giftIndex)
+                    if (other.wishIndex == this.parentChain.First.Value.giftIndex)
+                    {
+                        foreach (var chainElements in this.parentChain)
                         {
-                            foreach (var chainElements in this.parentChain)
-                            {
-                                
-                            }
+                            chainElements.sinked = true;
                         }
                     }
+                }
             }
 
             notYetChecked.Clear();
@@ -136,70 +135,112 @@ public class Rock : MonoBehaviour
     void Update()
     {
         constrain();
-        addForce();
-        wander();
 
-        if (parentChain.First.Value == this)
+        if (sinked)
         {
-            material.color = Color.green;
-        }
-        else if (parentChain.Last.Value == this)
-        {
-            material.color = Color.red;
+            addForceSinked();
+            material.color = Color.yellow;
         }
         else
         {
-            material.color = Color.white;
+            addForce();
+            wander();
+
+            if (parentChain.First.Value == this)
+            {
+                material.color = Color.green;
+            }
+            else if (parentChain.Last.Value == this)
+            {
+                material.color = Color.red;
+            }
+            else
+            {
+                material.color = Color.white;
+            }
         }
     }
 
     #region Physics
-    // private void
+    private void addForceSinked()
+    {
+
+    }
+
+    private void attract(Rock other, float strength)
+    {
+        if (other == this) return;
+
+        Vector3 dir = other.giftTransform.position - this.wishTransform.position;
+        float sqrDist = dir.sqrMagnitude;
+        dir.Normalize();
+
+        float gravitationStrength = RockManager.instance.gravitationStrength * strength;
+
+        prevSqrDistanceToNext = sqrDistanceToNext;
+        sqrDistanceToNext = sqrDist;
+
+        if (sqrDistanceToNext > 0.5f)
+        {
+            this.wishRb.AddForce(dir * gravitationStrength, ForceMode.Force);
+            getNext().giftRb.AddForce(-dir * gravitationStrength, ForceMode.Force);
+        }
+        else if (prevSqrDistanceToNext <= 0.5f)
+        {
+            this.wishRb.velocity = Vector3.zero;
+        }
+    }
+
+    private void compulse(Rock other)
+    {
+        if (other == this) return;
+
+        Vector3 dir = other.giftTransform.position - this.wishTransform.position;
+        float sqrDist = dir.sqrMagnitude;
+        dir.Normalize();
+
+        float gravitationStrength = RockManager.instance.gravitationStrength;
+
+        float compulseThreshold = 0f;
+
+        if (parentChain.Contains(other))
+        {
+            compulseThreshold = 1.5f;
+        }
+        else
+        {
+            compulseThreshold = 8f;
+        }
+
+        if (sqrDist < compulseThreshold)
+        {
+            this.wishRb.AddForce(-dir * gravitationStrength / (0.1f + sqrDist), ForceMode.Force);
+            other.giftRb.AddForce(dir * gravitationStrength / (0.1f + sqrDist), ForceMode.Force);
+        }
+    }
     private void addForce()
     {
         foreach (Rock other in RockManager.Rocks)
         {
-            if (other == this) continue;
-
-            Vector3 dir = other.giftTransform.position - this.wishTransform.position;
-            float sqrDist = dir.sqrMagnitude;
-            dir.Normalize();
-
-            float gravitationStrength = RockManager.instance.gravitationStrength;
-
             if (other == getNext())
             {
-                prevSqrDistanceToNext = sqrDistanceToNext;
-                sqrDistanceToNext = sqrDist;
-
-                if (sqrDistanceToNext > 0.5f)
-                {
-                    this.wishRb.AddForce(dir * gravitationStrength, ForceMode.Force);
-                    getNext().giftRb.AddForce(-dir * gravitationStrength, ForceMode.Force);
-                }
-                else if (prevSqrDistanceToNext <= 0.5f)
-                {
-                    this.wishRb.velocity = Vector3.zero;
-                }
+                attract(other, 1f);
             }
             else
             {
-                float compulseThreshold = 0f;
+                compulse(other);
+            }
+        }
 
-                if (parentChain.Contains(other))
-                {
-                    compulseThreshold = 1.5f;
-                }
-                else
-                {
-                    compulseThreshold = 8f;
-                }
-
-                if (sqrDist < compulseThreshold)
-                {
-                    this.wishRb.AddForce(-dir * gravitationStrength / (0.1f + sqrDist), ForceMode.Force);
-                    other.giftRb.AddForce(dir * gravitationStrength / (0.1f + sqrDist), ForceMode.Force);
-                }
+        if (sinked)
+        {
+            if (parentChain.First.Value == this)
+            {
+                this.wishRb.AddForce(Vector3.down * 10f, ForceMode.Force);
+            }
+            else
+            {
+                this.wishRb.AddForce(Vector3.up * 1f, ForceMode.Force);
             }
         }
     }

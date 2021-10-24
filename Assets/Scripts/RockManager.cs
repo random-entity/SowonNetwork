@@ -25,7 +25,7 @@ public class RockManager : MonoSingleton<RockManager>
             Vector3 direction = new Vector3(x, y, 0f).normalized;
             float magnitude = Random.Range(minWanderForce, maxWanderForce);
             ChainToWanderForce[chain] = direction * magnitude;
-            Debug.Log("Chain with root " + chain.First.Value.gameObject.name + " wander force set to " + ChainToWanderForce[chain].ToString());
+            // Debug.Log("Chain with root " + chain.First.Value.gameObject.name + " wander force set to " + ChainToWanderForce[chain].ToString());
         }
         yield return new WaitForSeconds(2f);
         StopAllCoroutines();
