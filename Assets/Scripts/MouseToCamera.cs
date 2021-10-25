@@ -25,8 +25,8 @@ public class MouseToCamera : MonoBehaviour
         Vector3 pos = transform.position;
 
         pos.z = Mathf.Clamp(pos.z, minZ, maxZ);
-        pos.x = Mathf.Clamp(pos.x, EnvironmentSpecs.boundXLeft + 4f, EnvironmentSpecs.boundXRight - 4f);
-        pos.y = Mathf.Clamp(pos.y, EnvironmentSpecs.boundYBottomSinked + 2f, EnvironmentSpecs.boundYTop - 4f);
+        pos.x = Mathf.Clamp(pos.x, EnvironmentSpecs.boundXLeft + 15f, EnvironmentSpecs.boundXRight - 15f);
+        pos.y = Mathf.Clamp(pos.y, EnvironmentSpecs.boundYBottomSinked + 5f, EnvironmentSpecs.boundYTop - 15f);
    
         transform.position = new Vector3(pos.x, pos.y, pos.z);
     }

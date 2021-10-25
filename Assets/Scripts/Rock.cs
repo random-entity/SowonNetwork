@@ -177,7 +177,9 @@ public class Rock : MonoBehaviour
         dir.Normalize();
 
         strength *= dist; // dist > 1f ? dist : -dist;
-        next.wishRb.AddForce(-dir * strength, ForceMode.Acceleration);
+        next.wishRb.AddForce(-dir * strength * 0.5f, ForceMode.Acceleration); // 작용반작용 비대칭 1
+        this.giftRb.AddForce(dir * strength * 0.5f, ForceMode.Acceleration); // 작용반작용 비대칭 2
+        // 둘 다 있어야 근접을 함. 민기야!!! 작용반작용 빼지 말라니까!!!
 
         prevDistanceToNext = DistanceToNext;
         DistanceToNext = dist;
