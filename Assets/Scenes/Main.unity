@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.9037846, g: 0.97020155, b: 0.9978158, a: 1}
+  m_IndirectSpecularColor: {r: 0.9037881, g: 0.9702006, b: 0.99781364, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -862,7 +862,7 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1.49
   m_Text: "Hojeong Lee\n<\uC6D0 Wishes> 2021\nUnity, Interactive Installation\nArt
-    Space SNU\n\nProgramming by\nRandom Entity\n\nSpecial Thanks to\nMinki Cho"
+    Space SNU\n\nProgramming\nRandom Entity\n\nSpecial Thanks to\nMinki Cho"
 --- !u!222 &530226505
 CanvasRenderer:
   m_ObjectHideFlags: 0
