@@ -81,11 +81,11 @@ public class EmojiButtonManager : MonoSingleton<EmojiButtonManager>
             int buttonIndex = buttons[i].GetComponent<EmojiButton>().index;
             if (buttonIndex == currentWishSelection)
             {
-                buttons[i].image.color = Color.yellow;
+                buttons[i].image.color = Color.gray;
             }
             else if (buttonIndex == currentGiftSelection)
             {
-                buttons[i].image.color = Color.green;
+                buttons[i].image.color = Color.gray;
             }
             else
             {
