@@ -309,7 +309,7 @@ GameObject:
   - component: {fileID: 138809931}
   - component: {fileID: 138809930}
   m_Layer: 0
-  m_Name: RearCamera
+  m_Name: Far Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -327,10 +327,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d677a8b84af68418cb391f4656522c75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCloseCam: 0
   panSpeed: 10
   minZ: -50
-  maxZ: -4
-  zoomSensitivity: 1
+  maxZ: -20
+  zoomSensitivity: 4
 --- !u!20 &138809931
 Camera:
   m_ObjectHideFlags: 0
@@ -382,7 +383,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 138809929}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 26, z: -38}
+  m_LocalPosition: {x: 0, y: 30, z: -38}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -589,7 +590,7 @@ GameObject:
   - component: {fileID: 340400816}
   - component: {fileID: 340400815}
   m_Layer: 5
-  m_Name: Buttonup
+  m_Name: Whole View Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -659,21 +660,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 138809929}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 963194225}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
+      - m_Target: {fileID: 963194226}
+        m_TargetAssemblyTypeName: MouseToCamera, Assembly-CSharp
+        m_MethodName: setTrueCloseCamFalseFarCam
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1322,7 +1311,7 @@ GameObject:
   - component: {fileID: 684959557}
   - component: {fileID: 684959556}
   m_Layer: 5
-  m_Name: Buttondown
+  m_Name: Close View Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1392,21 +1381,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 138809929}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 963194225}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
+      - m_Target: {fileID: 963194226}
+        m_TargetAssemblyTypeName: MouseToCamera, Assembly-CSharp
+        m_MethodName: setTrueCloseCamFalseFarCam
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1861,7 +1838,7 @@ GameObject:
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: Close Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1879,10 +1856,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d677a8b84af68418cb391f4656522c75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCloseCam: 1
   panSpeed: 10
-  minZ: -50
+  minZ: -20
   maxZ: -4
-  zoomSensitivity: 1
+  zoomSensitivity: 6
 --- !u!20 &963194227
 Camera:
   m_ObjectHideFlags: 0
@@ -1934,7 +1912,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 27.5, z: -15}
+  m_LocalPosition: {x: 0, y: 30, z: -15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3032,7 +3010,8 @@ MonoBehaviour:
   rockParentTransform: {fileID: 292574145}
   minWanderForce: 2
   maxWanderForce: 8
-  mainCam: {fileID: 963194227}
+  closeCam: {fileID: 963194227}
+  farCam: {fileID: 138809931}
 --- !u!4 &1574155797
 Transform:
   m_ObjectHideFlags: 0

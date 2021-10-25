@@ -117,9 +117,11 @@ public class Rock : MonoBehaviour
 
                 if (other.getPrevious() == null && other.wishIndex == this.giftIndex)
                 {
-                    foreach (var currentChainElements in this.parentChain)
+                    foreach (Rock currentChainElements in this.parentChain)
                     {
-                        currentChainElements.transform.localScale *= 1.2f;
+                        currentChainElements.transform.localScale *= 1.15f;
+                        currentChainElements.wishRb.mass *= 1.15f * 1.15f * 1.15f;
+                        currentChainElements.giftRb.mass *= 1.15f * 1.15f * 1.15f;
                     }
                     foreach (var othersChainElements in other.parentChain)
                     {
@@ -174,7 +176,7 @@ public class Rock : MonoBehaviour
         dir.Normalize();
 
         strength *= dist; // dist > 1f ? dist : -dist;
-        next.wishRb.AddForce(-dir * strength, ForceMode.Force);
+        next.wishRb.AddForce(-dir * strength, ForceMode.Acceleration);
 
         prevDistanceToNext = DistanceToNext;
         DistanceToNext = dist;
@@ -197,8 +199,8 @@ public class Rock : MonoBehaviour
 
         if (sqrDist < compulseThreshold)
         {
-            this.wishRb.AddForce(-dir * strength / (0.1f + sqrDist), ForceMode.Force);
-            other.giftRb.AddForce(dir * strength / (0.1f + sqrDist), ForceMode.Force);
+            this.wishRb.AddForce(-dir * strength / (0.1f + sqrDist), ForceMode.Acceleration);
+            other.giftRb.AddForce(dir * strength / (0.1f + sqrDist), ForceMode.Acceleration);
         }
     }
 
@@ -224,43 +226,45 @@ public class Rock : MonoBehaviour
             compulse(other, 1f);
         }
 
-        if (sinked)
+        if (!sinked) attractNext(3f);
+        else
         {
+            attractNext(5f);
             if (parentChain.First.Value == this)
             {
                 if (this.wishRb.position.y > EnvironmentSpecs.boundYBottomSinked + 1f)
                 {
-                    this.wishRb.AddForce(Vector3.down * 8f, ForceMode.Force);
+                    this.wishRb.AddForce(Vector3.down * 10f, ForceMode.Acceleration);
                 }
             }
             else
             {
-                this.wishRb.AddForce(Vector3.up * 7f, ForceMode.Force);
+                this.wishRb.AddForce(Vector3.up * 7f, ForceMode.Acceleration);
             }
         }
     }
 
     private void wander()
     {
-        this.giftRb.AddForce(RockManager.ChainToWanderForce[parentChain], ForceMode.Force);
+        this.giftRb.AddForce(RockManager.ChainToWanderForce[parentChain], ForceMode.Acceleration);
     }
 
     private void constrain()
     {
         Vector3 pos = giftTransform.position;
-        if (pos.x < EnvironmentSpecs.boundXLeft) wishRb.AddForce(Vector3.right, ForceMode.Impulse);
-        if (pos.x > EnvironmentSpecs.boundXRight) wishRb.AddForce(Vector3.left, ForceMode.Impulse);
+        if (pos.x < EnvironmentSpecs.boundXLeft) wishRb.AddForce(Vector3.right, ForceMode.Acceleration);
+        if (pos.x > EnvironmentSpecs.boundXRight) wishRb.AddForce(Vector3.left, ForceMode.Acceleration);
         if (sinked)
         {
             if (pos.y < EnvironmentSpecs.boundYBottomSinked) giftTransform.position = new Vector3(pos.x, EnvironmentSpecs.boundYBottomSinked, pos.z); // wishRb.AddForce(Vector3.up, ForceMode.Impulse);
         }
         else
         {
-            if (pos.y < EnvironmentSpecs.boundYBottom) wishRb.AddForce(Vector3.up, ForceMode.Impulse);
+            if (pos.y < EnvironmentSpecs.boundYBottom) wishRb.AddForce(Vector3.up, ForceMode.Acceleration);
         }
-        if (pos.y > EnvironmentSpecs.boundYTop) wishRb.AddForce(Vector3.down, ForceMode.Impulse);
-        if (pos.z < EnvironmentSpecs.boundZFront) wishRb.AddForce(Vector3.forward, ForceMode.Impulse);
-        if (pos.z > EnvironmentSpecs.boundZBack) wishRb.AddForce(Vector3.back, ForceMode.Impulse);
+        if (pos.y > EnvironmentSpecs.boundYTop) wishRb.AddForce(Vector3.down, ForceMode.Acceleration);
+        if (pos.z < EnvironmentSpecs.boundZFront) wishRb.AddForce(Vector3.forward, ForceMode.Acceleration);
+        if (pos.z > EnvironmentSpecs.boundZBack) wishRb.AddForce(Vector3.back, ForceMode.Acceleration);
     }
     #endregion
 
