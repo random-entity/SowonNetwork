@@ -147,9 +147,8 @@ public class Rock : MonoBehaviour
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        constrain();
         addForce();
 
         if (sinked)
@@ -163,6 +162,8 @@ public class Rock : MonoBehaviour
         {
             wander();
         }
+
+        constrain();
     }
 
     #region Physics
@@ -251,20 +252,37 @@ public class Rock : MonoBehaviour
 
     private void constrain()
     {
-        Vector3 pos = giftTransform.position;
-        if (pos.x < EnvironmentSpecs.boundXLeft) wishRb.AddForce(Vector3.right, ForceMode.Acceleration);
-        if (pos.x > EnvironmentSpecs.boundXRight) wishRb.AddForce(Vector3.left, ForceMode.Acceleration);
+        Vector3 pos = transform.position;
+
+        if (pos.x < EnvironmentSpecs.boundXLeft) wishRb.AddForce(Vector3.right * 24f, ForceMode.Acceleration);
+        if (pos.x > EnvironmentSpecs.boundXRight) wishRb.AddForce(Vector3.left * 24f, ForceMode.Acceleration);
         if (sinked)
         {
             if (pos.y < EnvironmentSpecs.boundYBottomSinked) giftTransform.position = new Vector3(pos.x, EnvironmentSpecs.boundYBottomSinked, pos.z); // wishRb.AddForce(Vector3.up, ForceMode.Impulse);
         }
         else
         {
-            if (pos.y < EnvironmentSpecs.boundYBottom) wishRb.AddForce(Vector3.up, ForceMode.Acceleration);
+            if (pos.y < EnvironmentSpecs.boundYBottom) wishRb.AddForce(Vector3.up * 24f, ForceMode.Acceleration);
         }
-        if (pos.y > EnvironmentSpecs.boundYTop) wishRb.AddForce(Vector3.down, ForceMode.Acceleration);
-        if (pos.z < EnvironmentSpecs.boundZFront) wishRb.AddForce(Vector3.forward, ForceMode.Acceleration);
-        if (pos.z > EnvironmentSpecs.boundZBack) wishRb.AddForce(Vector3.back, ForceMode.Acceleration);
+        if (pos.y > EnvironmentSpecs.boundYTop) wishRb.AddForce(Vector3.down * 24f, ForceMode.Acceleration);
+        if (pos.z < EnvironmentSpecs.boundZFront) wishRb.AddForce(Vector3.forward * 24f, ForceMode.Acceleration);
+        if (pos.z > EnvironmentSpecs.boundZBack) wishRb.AddForce(Vector3.back * 24f, ForceMode.Acceleration);
+
+        // 왜 constrain이 잘 안 될까
+        pos.x = Mathf.Clamp(pos.x, EnvironmentSpecs.boundXLeft, EnvironmentSpecs.boundXRight);
+
+        if (sinked)
+        {
+            if (pos.y < EnvironmentSpecs.boundYBottomSinked) giftTransform.position = new Vector3(pos.x, EnvironmentSpecs.boundYBottomSinked, pos.z); // wishRb.AddForce(Vector3.up, ForceMode.Impulse);
+        }
+        else
+        {
+            pos.y = Mathf.Clamp(pos.y, EnvironmentSpecs.boundYBottom, EnvironmentSpecs.boundYTop);
+        }
+
+        pos.z = Mathf.Clamp(pos.z, EnvironmentSpecs.boundZFront, EnvironmentSpecs.boundZBack);
+
+        transform.position = new Vector3(pos.x, pos.y, pos.z);
     }
     #endregion
 

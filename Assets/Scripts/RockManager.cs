@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public delegate void RockEvent(Rock newRock);
 
@@ -17,6 +18,7 @@ public class RockManager : MonoSingleton<RockManager>
     public static Dictionary<LinkedList<Rock>, Vector3> ChainToWanderForce;
     [SerializeField] private float minWanderForce = 0.05f, maxWanderForce = 0.1f;
     [SerializeField] private Camera closeCam, farCam;
+    [SerializeField] private Toggle seeWishesToggle;
 
     private IEnumerator setRandomWanderData()
     {
@@ -48,11 +50,10 @@ public class RockManager : MonoSingleton<RockManager>
         Rock newRock = Instantiate(rockPrefab, new Vector3(currentCam.transform.position.x, currentCam.transform.position.y, 0f), Quaternion.identity); //new Vector3(Random.Range(EnvironmentSpecs.boundXLeft, EnvironmentSpecs.boundXRight), Random.Range(EnvironmentSpecs.boundYBottom, EnvironmentSpecs.boundYTop), 0f), Quaternion.identity);
 
         newRock.SetUsername(username);
-
         newRock.SetMeshAndTexture(Random.Range(0, meshPresets.Length), Random.Range(0, texturePresets.Length));
         newRock.SetWishAndGift(wishIndex, giftIndex);
-
         newRock.transform.SetParent(rockParentTransform);
+        newRock.SetInfoDisplay(seeWishesToggle.isOn);
 
         Rocks.Add(newRock);
 
