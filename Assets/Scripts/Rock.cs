@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -105,6 +106,15 @@ public class Rock : MonoBehaviour
         giftRb = giftTransform.GetComponent<Rigidbody>();
         material = GetComponentInChildren<MeshRenderer>().material;
     }
+    private IEnumerator increaseSize()
+    {
+        float destination = transform.localScale.x * 1.1f;
+        while (transform.localScale.x < destination)
+        {
+            transform.localScale = transform.localScale + new Vector3(0.1f, 0.1f, 0.1f);
+            yield return null;
+        }
+    }
     private void searchMatch() // 기존 돌이 자신의 gift(head)와 맞는 새로 추가된 남의 wish(tail)를 검색
     {
         if (sinked) return;
@@ -117,11 +127,12 @@ public class Rock : MonoBehaviour
 
                 if (other.getPrevious() == null && this.giftIndex == other.wishIndex)
                 {
-                    foreach (Rock currentChainElements in this.parentChain)
+                    foreach (Rock currentChainElement in this.parentChain)
                     {
-                        currentChainElements.transform.localScale *= 1.15f;
-                        currentChainElements.wishRb.mass *= 1.15f * 1.15f * 1.15f;
-                        currentChainElements.giftRb.mass *= 1.15f * 1.15f * 1.15f;
+                        // currentChainElements.transform.localScale *= 1.15f;
+                        StartCoroutine(currentChainElement.increaseSize());
+                        currentChainElement.wishRb.mass *= 1.15f * 1.15f * 1.15f;
+                        currentChainElement.giftRb.mass *= 1.15f * 1.15f * 1.15f;
                     }
                     foreach (var othersChainElements in other.parentChain)
                     {
@@ -261,7 +272,7 @@ public class Rock : MonoBehaviour
                 {
                     this.wishRb.AddForce(Vector3.down * 6f, ForceMode.Acceleration);
                 }
-                
+
                 this.giftRb.AddForce(Vector3.up * 1f, ForceMode.Acceleration);
             }
         }
