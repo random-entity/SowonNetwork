@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class MouseToCamera : MonoBehaviour
@@ -22,14 +23,54 @@ public class MouseToCamera : MonoBehaviour
             mouseZoom();
         }
 
+        ClampPosition(false, false);
+    }
+
+    public void ClampPosition(bool aboveSinkSurface, bool smooth)
+    {
+        if (smooth)
+        {
+            InvokeClampPositionSmooth(aboveSinkSurface);
+        }
+        else
+        {
+            Vector3 pos = transform.position;
+
+            pos.z = Mathf.Clamp(pos.z, minZ, maxZ);
+            pos.x = Mathf.Clamp(pos.x, EnvironmentSpecs.boundXLeft - 2f, EnvironmentSpecs.boundXRight + 2f);
+
+            float boundYBottom = aboveSinkSurface ? EnvironmentSpecs.boundYBottom : EnvironmentSpecs.boundYBottomSinked;
+            pos.y = Mathf.Clamp(pos.y, boundYBottom - 2f, EnvironmentSpecs.boundYTop + 2f);
+
+            transform.position = new Vector3(pos.x, pos.y, pos.z);
+        }
+    }
+
+    public void InvokeClampPositionSmooth(bool aboveSinkSurface)
+    {
+        StopAllCoroutines();
+        StartCoroutine(ClampPositionSmooth(aboveSinkSurface));
+    }
+
+    private IEnumerator ClampPositionSmooth(bool aboveSinkSurface)
+    {
         Vector3 pos = transform.position;
 
         pos.z = Mathf.Clamp(pos.z, minZ, maxZ);
-        pos.x = Mathf.Clamp(pos.x, EnvironmentSpecs.boundXLeft + 15f, EnvironmentSpecs.boundXRight - 15f);
-        pos.y = Mathf.Clamp(pos.y, EnvironmentSpecs.boundYBottomSinked + 5f, EnvironmentSpecs.boundYTop - 15f);
-   
-        transform.position = new Vector3(pos.x, pos.y, pos.z);
+        pos.x = Mathf.Clamp(pos.x, EnvironmentSpecs.boundXLeft - 2f, EnvironmentSpecs.boundXRight + 2f);
+
+        float boundYBottom = aboveSinkSurface ? EnvironmentSpecs.boundYBottom : EnvironmentSpecs.boundYBottomSinked;
+        pos.y = Mathf.Clamp(pos.y, boundYBottom - 2f, EnvironmentSpecs.boundYTop + 2f);
+
+        Vector3 destination = new Vector3(pos.x, pos.y, pos.z);
+
+        while ((destination - transform.position).sqrMagnitude > 0.01f)
+        {
+            transform.position = Vector3.Lerp(transform.position, destination, 0.25f);
+            yield return null;
+        }
     }
+
 
     public void setTrueCloseCamFalseFarCam(bool set)
     {

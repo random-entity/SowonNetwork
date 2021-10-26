@@ -47,7 +47,15 @@ public class RockManager : MonoSingleton<RockManager>
     public Rock AddRock(string username, int wishIndex, int giftIndex)
     {
         Camera currentCam = MouseToCamera.trueCloseCamFalseFarCam ? closeCam : farCam;
-        Rock newRock = Instantiate(rockPrefab, new Vector3(currentCam.transform.position.x, currentCam.transform.position.y, 0f), Quaternion.identity); //new Vector3(Random.Range(EnvironmentSpecs.boundXLeft, EnvironmentSpecs.boundXRight), Random.Range(EnvironmentSpecs.boundYBottom, EnvironmentSpecs.boundYTop), 0f), Quaternion.identity);
+        Camera restingCam = MouseToCamera.trueCloseCamFalseFarCam ? farCam : closeCam;
+
+        currentCam.GetComponent<MouseToCamera>().ClampPosition(true, true);
+        restingCam.GetComponent<MouseToCamera>().ClampPosition(true, false);
+
+        float spawnPosX = Mathf.Clamp(currentCam.transform.position.x, EnvironmentSpecs.boundXLeft + 2f, EnvironmentSpecs.boundXRight - 2f);
+        float spawnPosY = Mathf.Clamp(currentCam.transform.position.y, EnvironmentSpecs.boundYBottomSinked + 2f, EnvironmentSpecs.boundYTop - 2f);
+
+        Rock newRock = Instantiate(rockPrefab, new Vector3(spawnPosX, spawnPosY, 0f), Quaternion.identity); //new Vector3(Random.Range(EnvironmentSpecs.boundXLeft, EnvironmentSpecs.boundXRight), Random.Range(EnvironmentSpecs.boundYBottom, EnvironmentSpecs.boundYTop), 0f), Quaternion.identity);
 
         newRock.SetUsername(username);
         newRock.SetMeshAndTexture(Random.Range(0, meshPresets.Length), Random.Range(0, texturePresets.Length));
