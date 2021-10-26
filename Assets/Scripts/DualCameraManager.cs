@@ -23,7 +23,7 @@ public class DualCameraManager : MonoBehaviour
             mouseZoom();
         }
 
-        ClampPosition(false, false);
+        ClampPosition(false, true);
     }
 
     public void ClampPosition(bool aboveSinkSurface, bool smooth)

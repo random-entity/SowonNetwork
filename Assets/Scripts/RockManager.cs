@@ -81,13 +81,12 @@ public class RockManager : MonoSingleton<RockManager>
 
     private void explode()
     {
-        Debug.Log("explode");
         Vector3 camWorldZ0 = getCamera(true).transform.position;
         camWorldZ0.z = 0f;
 
         foreach (Rock rock in Rocks)
         {
-            rock.wishRb.AddExplosionForce(4f, camWorldZ0, 10000f, 10f, ForceMode.Acceleration);
+            rock.explode(camWorldZ0, 2000f);
         }
     }
 

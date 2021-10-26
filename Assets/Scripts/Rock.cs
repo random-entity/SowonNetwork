@@ -252,10 +252,8 @@ public class Rock : MonoBehaviour
                 {
                     this.wishRb.AddForce(Vector3.down * 20f, ForceMode.Acceleration);
                 }
-                else
-                {
-                    this.wishRb.AddForce(Vector3.up * 2f, ForceMode.Acceleration);
-                }
+
+                this.giftRb.AddForce(Vector3.up * 2f, ForceMode.Acceleration);
             }
             else
             {
@@ -263,10 +261,8 @@ public class Rock : MonoBehaviour
                 {
                     this.wishRb.AddForce(Vector3.down * 6f, ForceMode.Acceleration);
                 }
-                else
-                {
-                    this.wishRb.AddForce(Vector3.up * 1f, ForceMode.Acceleration);
-                }
+                
+                this.giftRb.AddForce(Vector3.up * 1f, ForceMode.Acceleration);
             }
         }
     }
@@ -274,6 +270,14 @@ public class Rock : MonoBehaviour
     private void wander()
     {
         this.wishRb.AddForce(RockManager.ChainToWanderForce[parentChain], ForceMode.Acceleration);
+    }
+
+    public void explode(Vector3 explosionPosition, float force)
+    {
+        if (!sinked)
+        {
+            wishRb.AddExplosionForce(force, explosionPosition, 40f, 0f, ForceMode.Acceleration);
+        }
     }
 
     private void constrain()
