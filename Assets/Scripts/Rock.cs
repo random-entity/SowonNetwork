@@ -45,6 +45,15 @@ public class Rock : MonoBehaviour
     #endregion
 
     #region getters and setters
+    public UserData GetUserData()
+    {
+        return new UserData()
+        {
+            username = this.username,
+            wishIndex = this.wishIndex,
+            giftIndex = this.giftIndex,
+        };
+    }
     public void SetUsername(string username)
     {
         this.username = username;
