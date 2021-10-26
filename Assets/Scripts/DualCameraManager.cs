@@ -1,9 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-public class MouseToCamera : MonoBehaviour
+public class DualCameraManager : MonoBehaviour
 {
-    public static bool trueCloseCamFalseFarCam = true;
+    public static bool currentCamera_closeCamTrue_farCamFalse = true;
     [SerializeField] private bool isCloseCam;
 
     private Vector3 panOrigin;
@@ -18,7 +18,7 @@ public class MouseToCamera : MonoBehaviour
     {
         mousePan();
 
-        if (isCloseCam == trueCloseCamFalseFarCam)
+        if (isCloseCam == currentCamera_closeCamTrue_farCamFalse)
         {
             mouseZoom();
         }
@@ -74,9 +74,9 @@ public class MouseToCamera : MonoBehaviour
 
     public void setTrueCloseCamFalseFarCam(bool set)
     {
-        trueCloseCamFalseFarCam = set;
+        currentCamera_closeCamTrue_farCamFalse = set;
 
-        this.GetComponent<Camera>().enabled = isCloseCam == trueCloseCamFalseFarCam;
+        this.GetComponent<Camera>().enabled = isCloseCam == currentCamera_closeCamTrue_farCamFalse;
     }
 
     private void mousePan()

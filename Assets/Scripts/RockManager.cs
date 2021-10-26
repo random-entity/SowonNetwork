@@ -44,13 +44,20 @@ public class RockManager : MonoSingleton<RockManager>
         StartCoroutine(setRandomWanderData());
     }
 
+    private Camera getCamera(bool getCurrentCamTrue_getRestingCamFalse)
+    {
+        Camera currentCam = DualCameraManager.currentCamera_closeCamTrue_farCamFalse ? closeCam : farCam;
+        Camera restingCam = DualCameraManager.currentCamera_closeCamTrue_farCamFalse ? farCam : closeCam;
+        return getCurrentCamTrue_getRestingCamFalse ? currentCam : restingCam;
+    }
+
     public Rock AddRock(string username, int wishIndex, int giftIndex)
     {
-        Camera currentCam = MouseToCamera.trueCloseCamFalseFarCam ? closeCam : farCam;
-        Camera restingCam = MouseToCamera.trueCloseCamFalseFarCam ? farCam : closeCam;
+        Camera currentCam = DualCameraManager.currentCamera_closeCamTrue_farCamFalse ? closeCam : farCam;
+        Camera restingCam = DualCameraManager.currentCamera_closeCamTrue_farCamFalse ? farCam : closeCam;
 
-        currentCam.GetComponent<MouseToCamera>().ClampPosition(true, true);
-        restingCam.GetComponent<MouseToCamera>().ClampPosition(true, false);
+        getCamera(true).GetComponent<DualCameraManager>().ClampPosition(true, true);
+        getCamera(false).GetComponent<DualCameraManager>().ClampPosition(true, false);
 
         float spawnPosX = Mathf.Clamp(currentCam.transform.position.x, EnvironmentSpecs.boundXLeft + 2f, EnvironmentSpecs.boundXRight - 2f);
         float spawnPosY = Mathf.Clamp(currentCam.transform.position.y, EnvironmentSpecs.boundYBottomSinked + 2f, EnvironmentSpecs.boundYTop - 2f);
@@ -72,6 +79,18 @@ public class RockManager : MonoSingleton<RockManager>
         return newRock;
     }
 
+    private void explode()
+    {
+        Debug.Log("explode");
+        Vector3 camWorldZ0 = getCamera(true).transform.position;
+        camWorldZ0.z = 0f;
+
+        foreach (Rock rock in Rocks)
+        {
+            rock.wishRb.AddExplosionForce(4f, camWorldZ0, 10000f, 10f, ForceMode.Acceleration);
+        }
+    }
+
     public void SetAllRocksInfoDisplay(bool on)
     {
         foreach (Rock rock in Rocks)
@@ -87,6 +106,10 @@ public class RockManager : MonoSingleton<RockManager>
             AddRock("USER" + tempCurrentUserIndex, Random.Range(0, emojiTextures.Length), Random.Range(0, emojiTextures.Length));
 
             Debug.Log("Chains : " + Chains.Count);
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            explode();
         }
     }
 }
