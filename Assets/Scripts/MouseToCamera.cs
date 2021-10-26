@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class MouseToCamera : MonoBehaviour
 {
+    public static bool trueCloseCamFalseFarCam = true;
+    [SerializeField] private bool isCloseCam;
+
     private Vector3 panOrigin;
     private Vector3 oldPos;
     [SerializeField] private float panSpeed;
@@ -13,7 +16,26 @@ public class MouseToCamera : MonoBehaviour
     private void Update()
     {
         mousePan();
-        mouseZoom();
+
+        if (isCloseCam == trueCloseCamFalseFarCam)
+        {
+            mouseZoom();
+        }
+
+        Vector3 pos = transform.position;
+
+        pos.z = Mathf.Clamp(pos.z, minZ, maxZ);
+        pos.x = Mathf.Clamp(pos.x, EnvironmentSpecs.boundXLeft + 15f, EnvironmentSpecs.boundXRight - 15f);
+        pos.y = Mathf.Clamp(pos.y, EnvironmentSpecs.boundYBottomSinked + 5f, EnvironmentSpecs.boundYTop - 15f);
+   
+        transform.position = new Vector3(pos.x, pos.y, pos.z);
+    }
+
+    public void setTrueCloseCamFalseFarCam(bool set)
+    {
+        trueCloseCamFalseFarCam = set;
+
+        this.GetComponent<Camera>().enabled = isCloseCam == trueCloseCamFalseFarCam;
     }
 
     private void mousePan()
@@ -39,9 +61,6 @@ public class MouseToCamera : MonoBehaviour
 
         Vector3 pos = transform.position;
         pos.z += Input.GetAxis("Mouse ScrollWheel") * zoomSensitivity;
-        pos.z = Mathf.Clamp(pos.z, minZ, maxZ);
-        pos.x = Mathf.Clamp(pos.x, EnvironmentSpecs.boundXLeft, EnvironmentSpecs.boundXRight);
-        pos.y = Mathf.Clamp(pos.y, EnvironmentSpecs.boundYBottomSinked, EnvironmentSpecs.boundYTop);
 
         transform.position = new Vector3(pos.x, pos.y, pos.z);
     }
