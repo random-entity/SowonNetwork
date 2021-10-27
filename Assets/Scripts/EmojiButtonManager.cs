@@ -32,7 +32,7 @@ public class EmojiButtonManager : MonoSingleton<EmojiButtonManager>
 
             b.GetComponent<RectTransform>().position = new Vector3(
                 (float)Screen.width * Mathf.Lerp(0.4f, 0.6f, (float)x / 4f),
-                (float)Screen.height * Mathf.Lerp(0.6f, 0.3f, (float)y / 4f),
+                (float)Screen.height * Mathf.Lerp(0.65f, 0.35f, (float)y / 4f),
                 -1f
             );
         }
