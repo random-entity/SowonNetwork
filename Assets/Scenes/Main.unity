@@ -981,12 +981,12 @@ GameObject:
   - component: {fileID: 428970530}
   - component: {fileID: 428970529}
   m_Layer: 5
-  m_Name: edit Panel
+  m_Name: Save Load Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &428970528
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3265,7 +3265,7 @@ GameObject:
   - component: {fileID: 1637078558}
   - component: {fileID: 1637078557}
   m_Layer: 5
-  m_Name: editToggle (1)
+  m_Name: Save Load Panel Toggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
