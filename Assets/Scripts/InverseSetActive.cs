@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EyesClosedImage : MonoBehaviour
+public class InverseSetActive : MonoBehaviour
 {
     public void SetActiveInverse(bool on)
     {

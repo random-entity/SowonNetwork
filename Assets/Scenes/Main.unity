@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.9037846, g: 0.97020155, b: 0.9978158, a: 1}
+  m_IndirectSpecularColor: {r: 0.9037881, g: 0.9702006, b: 0.99781364, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -123,6 +123,85 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &10194228
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 10194229}
+  - component: {fileID: 10194231}
+  - component: {fileID: 10194230}
+  m_Layer: 5
+  m_Name: Don't Touch Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &10194229
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10194228}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 428970528}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 51}
+  m_SizeDelta: {x: 160, y: 30}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &10194230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10194228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 17
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: "\uAD00\uB9AC\uC790 \uC678 \uB204\uB974\uC9C0 \uB9C8\uC2DC\uC624."
+--- !u!222 &10194231
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10194228}
+  m_CullTransparentMesh: 1
 --- !u!1 &138809929
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,7 +330,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 124.06384, y: -98.024185}
+  m_AnchoredPosition: {x: 124.06384, y: -109.99989}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &205693104
@@ -418,7 +497,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Hide/ Show Wishes
+  m_Text: Hide / Show Wishes
 --- !u!222 &250315235
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -705,7 +784,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 124.06384, y: -48.024307}
+  m_AnchoredPosition: {x: 124.06384, y: -60}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &381566301
@@ -849,7 +928,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 381983457}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55ce2c06e57ccea4c9ec42e59664525c, type: 3}
+  m_Script: {fileID: 11500000, guid: 1889a13bc7c64a744a1b6e36fee951f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &381983460
@@ -907,7 +986,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &428970528
 RectTransform:
   m_ObjectHideFlags: 0
@@ -921,13 +1000,14 @@ RectTransform:
   m_Children:
   - {fileID: 381566300}
   - {fileID: 205693103}
+  - {fileID: 10194229}
   m_Father: {fileID: 1637078556}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 135, y: 45.10266}
-  m_SizeDelta: {x: 217.3535, y: 102.1459}
+  m_AnchoredPosition: {x: 135, y: 50.369854}
+  m_SizeDelta: {x: 217.3535, y: 112.68028}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &428970529
 MonoBehaviour:
@@ -2057,7 +2137,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 381983459}
-        m_TargetAssemblyTypeName: EyesClosedImage, Assembly-CSharp
+        m_TargetAssemblyTypeName: InverseSetActive, Assembly-CSharp
         m_MethodName: SetActiveInverse
         m_Mode: 0
         m_Arguments:
@@ -2575,6 +2655,7 @@ GameObject:
   - component: {fileID: 1422383614}
   - component: {fileID: 1422383613}
   - component: {fileID: 1422383612}
+  - component: {fileID: 1422383615}
   m_Layer: 5
   m_Name: Caption Toggle
   m_TagString: Untagged
@@ -2662,6 +2743,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1868286780}
+        m_TargetAssemblyTypeName: InverseToggle, Assembly-CSharp
+        m_MethodName: OffWhenOtherOn
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
 --- !u!114 &1422383613
 MonoBehaviour:
@@ -2701,6 +2794,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1422383610}
   m_CullTransparentMesh: 1
+--- !u!114 &1422383615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422383610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87a32e3921ae6e447bee10f71fb004c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1423984108
 GameObject:
   m_ObjectHideFlags: 0
@@ -3839,6 +3944,7 @@ GameObject:
   - component: {fileID: 1868286779}
   - component: {fileID: 1868286778}
   - component: {fileID: 1868286777}
+  - component: {fileID: 1868286780}
   m_Layer: 5
   m_Name: How To Toggle
   m_TagString: Untagged
@@ -3926,6 +4032,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1422383615}
+        m_TargetAssemblyTypeName: InverseToggle, Assembly-CSharp
+        m_MethodName: OffWhenOtherOn
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
 --- !u!114 &1868286778
 MonoBehaviour:
@@ -3965,6 +4083,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1868286775}
   m_CullTransparentMesh: 1
+--- !u!114 &1868286780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868286775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87a32e3921ae6e447bee10f71fb004c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1970012720
 GameObject:
   m_ObjectHideFlags: 0
