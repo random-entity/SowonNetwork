@@ -22,6 +22,7 @@ public class SaveLoadManager : MonoBehaviour
 
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(Application.persistentDataPath + "/gamesave.save");
+        Debug.Log(Application.persistentDataPath);
         bf.Serialize(file, save);
         file.Close();
 
